@@ -3,25 +3,46 @@
 # Magic variables
 PACKETS=1
 
-
 # Returns ip address if there is a reply
 async_ping(){
+	
+	# Ping the device and get the response
+	ping -c $PACKETS $1 > ".$1.txt" # is there a better way to do this?
+	local txt=$(cat ".$1.txt")
+	rm ".$1.txt"		
 
-	# Spawn a subshell
-	ping -c 2 $1 > tmp.txt 
-	local txt=""
-	txt=$(cat tmp.txt)
-		
+	# Check if the device responded
 	if [[ $txt == *"bytes from"* ]]; then 
 		echo "$1 exists"
-#	else
-		#echo 0
 	fi
 }
 
+# Get the cmd line argument
+ip_addr=$1
+if [ -z $ip_addr ]; then 
+	echo "need an argument"
+	exit
+fi
+
+# Get the index of the * in the string
+index=0
+for i in $(seq 1 ${#ip_addr})
+do
+	if [[ ${ip_addr:$i-1:1} == "*" ]]; then
+		index=$i			
+		break	
+	fi	
+done
+
+
+# Getting the ip address in pure bash
+prestar=${ip_addr:0:$index-1}
+poststar=${ip_addr:$index:${#ip_addr}-$index}
+echo "searching for: $prestar*$poststar"
+
 # Start separate shells 
 for counter in {0..255}; do 
-	async_ping "10.97.102.$counter" &
+	async_ping "$prestar$counter$poststar" & 
 	pids[${i}]=$!; 
 done; 
 
