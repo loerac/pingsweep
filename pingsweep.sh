@@ -18,11 +18,25 @@ async_ping(){
 }
 
 # Get the cmd line argument
-ip_addr=$1
-if [ -z $ip_addr ]; then 
-	echo "need an argument"
-	exit
-fi
+## ----------- Added code -----------
+## Reading all the input with $@
+for i in $@; do
+	## Checking if there is any characters in the user input
+	## If there is, exit
+	if [[ $i =~ [a-z] || $i =~ [A-Z] ]]; then
+		echo "I don't like letters: $@"
+		exit
+	fi
+	## Concatenate the user input together is there is spacing between them
+	ip_addr=$ip_addr$i
+done
+echo $ip_addr
+## --- Your code
+#ip_addr=$1
+#if [ -z $ip_addr ]; then 
+#	echo "need an argument"
+#	exit
+#fi
 
 # Get the index of the * in the string
 index=0
