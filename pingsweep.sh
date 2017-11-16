@@ -18,35 +18,30 @@ async_ping(){
 }
 
 # Get the cmd line argument
-## ----------- Added code -----------
-## Reading all the input with $@
+## If there is no arguments, exit
 if [[ $# -eq 0 ]]; then
 	echo "Needs an argument"
 	exit
 fi
-per='.'
-for i in $@; do
-	## Checking if there is any characters in the user input
-	## If there is, exit
-#	if [[ $i =~ [\.] || $i =~ [0-9] ]]; then
-		## Concatenate the user input together is there is spacing between them
-#		ip_addr=$ip_addr$i
-#	fi
-	if [[ $i =~ [0-9] ]]; then
-		## Concatenate the user input together is there is spacing between them
-		ip_addr=$ip_addr$i$per
-	fi
 
+## If there is an asterisk in the IP Addr, fault
+if echo x"$ip_addr" | grep '*' > /dev/null; then
+	echo "No asterisk allowed"
+	exit
+fi
+
+## Reading all the input with $@
+for i in "${@}"; do
+	if [[ $i == "." || $i =~ [0-9] ]]; then
+		## Concatenate the user input together is there is spacing between them
+		ip_addr=$ip_addr$i
+	fi
 done
+
+## Add in the astriek in the end of the IP Addr
 astr='*'
 ip_addr=$ip_addr$astr
 echo $ip_addr
-exit
-#ip_addr=$1  ## YOu want to remove this line
-if [ -z $ip_addr ]; then 
-	echo "need an argument"
-	exit
-fi
 
 # Get the index of the * in the string
 index=0
