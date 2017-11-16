@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # Magic variables
 PACKETS=1
@@ -30,13 +30,14 @@ for i in $@; do
 	## Concatenate the user input together is there is spacing between them
 	ip_addr=$ip_addr$i
 done
+astr='*'
+ip_addr=$ip_addr$astr
 echo $ip_addr
-## --- Your code
-#ip_addr=$1
-#if [ -z $ip_addr ]; then 
-#	echo "need an argument"
-#	exit
-#fi
+ip_addr=$1  ## YOu want to remove this line
+if [ -z $ip_addr ]; then 
+	echo "need an argument"
+	exit
+fi
 
 # Get the index of the * in the string
 index=0
